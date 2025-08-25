@@ -5,26 +5,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>untoldcoding</title>
     <link
-      href="https://fonts.googleapis.com/css?family=VT323"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=VT323&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="style.css" />
+    <style>
+      :root { --accent: #ff6b6b; }
+      .confession { max-width: 820px; margin: 40px auto; padding: 0 16px; }
+      .controls { display:flex; align-items:center; gap:12px; position:sticky; top:0; background:rgba(0,0,0,.6); backdrop-filter: blur(6px); padding:8px 12px; border-radius:12px; color:#f5f5f5; }
+      .controls button { padding:8px 14px; border-radius:999px; border:1px solid #333; background:var(--accent); color:#fff; cursor:pointer; }
+      .controls label { font-size:14px; opacity:.9; }
+      .controls input[type=range]{ width:180px; }
+      .reader { height:60vh; overflow:auto; margin-top:12px; padding:24px; border-radius:16px; background:rgba(255,255,255,0.06); box-shadow: 0 10px 30px rgba(0,0,0,.35); }
+      .content { font-family: 'Playfair Display', serif; color:#f2f2f2; line-height:1.8; font-size:20px; }
+      .content h1 { font-weight:700; font-size:36px; margin:0 0 12px; color:#fff; }
+      .content p { margin:0 0 16px; }
+    </style>
   </head>
   <body>
     <div class="textCont"></div>
     <div class="song">
-      <div class="title">Tap to Play Sound</div>
+      <div class="title">Music</div>
       <div class="pause" onclick="togglePlay()">🔇</div>
       <div class="player">
         <audio
           class="audio"
-          src="song.mp3"
+          src="payung.mp3"
           autoplay
+          playsinline
+          muted
           type="audio"
-          loop=""
+          loop
         ></audio>
       </div>
     </div>
+
+    <section class="confession">
+      <div class="controls">
+        <button id="playScroll">Play</button>
+        <button id="pauseScroll">Pause</button>
+        <label>Speed</label>
+        <input id="speed" type="range" min="0.25" max="3" step="0.25" value="1" />
+      </div>
+      <div id="reader" class="reader">
+        <div class="content" id="content">
+          <h1>Assalamualaikum,</h1>
+          <p>This may feel sudden, but I’ve finally found the courage to be honest with you. I have feelings for you. Even when you were with others before, I kept waiting for the right moment to say this, because I was afraid I’d have to see someone else win again if I didn’t speak up. I value our friendship deeply, and that’s why I’ve been shy—because I never want to risk losing it.</p>
+          <p>After making istikharah, my heart feels at peace that you might be the right person for me. I know I sometimes send too many messages on TikTok—it’s only because I genuinely enjoy talking with you. Seeing you with someone else hurts a little, but I remind myself to be respectful. Whenever we spend time together, my feelings grow stronger.</p>
+          <p>I also wanted to tell you this now because it feels like the right time. I don’t expect anything from you, so please don’t feel pressured. I’m willing to wait until you’re ready—even until we’re 27, like I said before :). If you already have someone in your heart, I’ll accept that and keep going, no worries.</p>
+          <p>Thank you for always being there and for the time we’ve shared. I hope to be with someone who understands me, would be my travel partner, and can accept my clinginess. Whatever your answer is, thank you for reading. This might be a bit cringe, but if you have someone else, I’ll step back gracefully and wish you the best in everything you do. Please don’t cut the friendship—just act normally :) I’m a little shy right now. Bye.</p>
+        </div>
+      </div>
+    </section>
     <footer>
       <a
         href="https://www.instagram.com/untoldcoding/"
@@ -48,6 +80,38 @@
           pause.style.color = " #848484";
         }
       }
+
+      // Autoplay workflow and unmute on first interaction
+      window.addEventListener('load', () => {
+        const tryPlay = async () => {
+          try {
+            await audio.play();
+            setTimeout(() => { audio.muted = false; }, 300);
+          } catch (e) {}
+        };
+        tryPlay();
+        const unmute = () => { audio.muted = false; window.removeEventListener('pointerdown', unmute); };
+        window.addEventListener('pointerdown', unmute, { once: true });
+
+        // Smooth auto-scrolling reader
+        const reader = document.getElementById('reader');
+        const speedInput = document.getElementById('speed');
+        const playBtn = document.getElementById('playScroll');
+        const pauseBtn = document.getElementById('pauseScroll');
+
+        let running = false; let last = null; let speed = parseFloat(speedInput.value);
+        function step(ts){
+          if(!running){ last = null; return; }
+          if(last===null){ last = ts; requestAnimationFrame(step); return; }
+          const dt = (ts - last) / 1000; last = ts;
+          reader.scrollTop += dt * 40 * speed; // 40px/sec base
+          if(reader.scrollTop + reader.clientHeight >= reader.scrollHeight){ running = false; }
+          else requestAnimationFrame(step);
+        }
+        playBtn.addEventListener('click', () => { running = true; requestAnimationFrame(step); });
+        pauseBtn.addEventListener('click', () => { running = false; });
+        speedInput.addEventListener('input', () => { speed = parseFloat(speedInput.value); });
+      });
     </script>
     <script src="new.js"></script>
   </body>
