@@ -20,7 +20,8 @@
       .content { font-family: 'Playfair Display', serif; color:#f2f2f2; line-height:1.8; font-size:20px; }
       .content h1 { font-weight:700; font-size:36px; margin:0 0 12px; color:#fff; }
       .content p { margin:0 0 16px; }
-      .sound-gate { position:fixed; left:50%; transform:translateX(-50%); bottom:16px; background:var(--accent); color:#fff; padding:10px 14px; border-radius:999px; box-shadow:0 6px 16px rgba(0,0,0,.3); cursor:pointer; z-index:9999; }
+      .sound-gate { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,.6); z-index:9999; }
+      .sound-gate button { background:var(--accent); color:#fff; padding:14px 20px; border:none; border-radius:999px; font-size:16px; cursor:pointer; box-shadow:0 8px 20px rgba(0,0,0,.35); }
     </style>
   </head>
   <body>
@@ -40,7 +41,7 @@
         ></audio>
       </div>
     </div>
-    <button id="soundGate" class="sound-gate" style="display:none">Tap to enable sound</button>
+    <div id="soundGate" class="sound-gate" style="display:none"><button id="soundGateBtn">Tap to enable sound</button></div>
 
     <section class="confession">
       <div class="controls">
@@ -86,7 +87,8 @@
       // Autoplay workflow and unmute on first interaction
       window.addEventListener('load', () => {
         const soundGate = document.getElementById('soundGate');
-        const showGate = () => { soundGate.style.display = 'block'; };
+        const soundGateBtn = document.getElementById('soundGateBtn');
+        const showGate = () => { soundGate.style.display = 'flex'; };
         const hideGate = () => { soundGate.style.display = 'none'; };
 
         const tryPlay = async () => {
@@ -109,6 +111,8 @@
 
         // Button explicit unlock
         soundGate.addEventListener('click', unlock);
+        soundGateBtn.addEventListener('click', unlock);
+        playBtn.addEventListener('click', unlock, { once: true });
 
         // Smooth auto-scrolling reader
         const reader = document.getElementById('reader');
