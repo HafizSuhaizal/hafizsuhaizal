@@ -20,6 +20,7 @@
       .content { font-family: 'Playfair Display', serif; color:#f2f2f2; line-height:1.8; font-size:20px; }
       .content h1 { font-weight:700; font-size:36px; margin:0 0 12px; color:#fff; }
       .content p { margin:0 0 16px; }
+      .sound-gate { position:fixed; left:50%; transform:translateX(-50%); bottom:16px; background:var(--accent); color:#fff; padding:10px 14px; border-radius:999px; box-shadow:0 6px 16px rgba(0,0,0,.3); cursor:pointer; z-index:9999; }
     </style>
   </head>
   <body>
@@ -39,6 +40,7 @@
         ></audio>
       </div>
     </div>
+    <button id="soundGate" class="sound-gate" style="display:none">Tap to enable sound</button>
 
     <section class="confession">
       <div class="controls">
@@ -83,15 +85,30 @@
 
       // Autoplay workflow and unmute on first interaction
       window.addEventListener('load', () => {
+        const soundGate = document.getElementById('soundGate');
+        const showGate = () => { soundGate.style.display = 'block'; };
+        const hideGate = () => { soundGate.style.display = 'none'; };
+
         const tryPlay = async () => {
           try {
             await audio.play();
-            setTimeout(() => { audio.muted = false; }, 300);
-          } catch (e) {}
+            audio.muted = false;
+            hideGate();
+          } catch (e) {
+            showGate();
+          }
         };
         tryPlay();
-        const unmute = () => { audio.muted = false; window.removeEventListener('pointerdown', unmute); };
-        window.addEventListener('pointerdown', unmute, { once: true });
+
+        // On any user gesture, unmute and play
+        const unlock = async () => { audio.muted = false; await audio.play().catch(()=>{}); hideGate(); };
+        window.addEventListener('pointerdown', unlock, { once: true });
+
+        // Retry when page becomes visible (some mobile browsers allow after navigation)
+        document.addEventListener('visibilitychange', () => { if (!document.hidden) tryPlay(); });
+
+        // Button explicit unlock
+        soundGate.addEventListener('click', unlock);
 
         // Smooth auto-scrolling reader
         const reader = document.getElementById('reader');
