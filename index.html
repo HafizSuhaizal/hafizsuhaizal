@@ -15,10 +15,56 @@
       <a href="letter.html"><div class="heart4"></div></a>
     </div>
 
-    <div class="text">
+    <div id="instruction">
+      <h2>Click the sound to continue</h2>
+      <button id="soundBtn" aria-label="Play sound">🔊 Play sound</button>
+    </div>
+
+    <div class="text" style="display: none;">
       <h1>I have something for you</h1>
       <br />
       <p>Tap the heart to open</p>
     </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        var soundBtn = document.getElementById('soundBtn');
+        var instruction = document.getElementById('instruction');
+        var text = document.querySelector('.text');
+
+        if (soundBtn) {
+          soundBtn.addEventListener('click', function () {
+            try {
+              var AudioContextRef = window.AudioContext || window.webkitAudioContext;
+              var ctx = new AudioContextRef();
+              var oscillator = ctx.createOscillator();
+              var gain = ctx.createGain();
+
+              oscillator.type = 'sine';
+              oscillator.frequency.value = 440;
+
+              gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+              gain.gain.exponentialRampToValueAtTime(0.2, ctx.currentTime + 0.01);
+
+              oscillator.connect(gain);
+              gain.connect(ctx.destination);
+
+              oscillator.start();
+              setTimeout(function () {
+                gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.05);
+                oscillator.stop(ctx.currentTime + 0.06);
+                ctx.close();
+              }, 300);
+            } catch (e) {
+              // Ignore audio errors (e.g., unsupported browser)
+            }
+
+            alert('I have something for you\nTap the heart to open');
+            if (instruction) instruction.style.display = 'none';
+            if (text) text.style.display = 'block';
+          });
+        }
+      });
+    </script>
   </body>
 </html>
