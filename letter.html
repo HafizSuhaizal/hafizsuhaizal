@@ -105,6 +105,11 @@
         // On any user gesture, unmute and play
         const unlock = async () => { audio.muted = false; await audio.play().catch(()=>{}); hideGate(); };
         window.addEventListener('pointerdown', unlock, { once: true });
+        window.addEventListener('touchstart', unlock, { once: true, passive: true });
+        window.addEventListener('mousemove', unlock, { once: true });
+        window.addEventListener('wheel', unlock, { once: true, passive: true });
+        window.addEventListener('keydown', unlock, { once: true });
+        window.addEventListener('scroll', unlock, { once: true, passive: true });
 
         // Retry when page becomes visible (some mobile browsers allow after navigation)
         document.addEventListener('visibilitychange', () => { if (!document.hidden) tryPlay(); });
