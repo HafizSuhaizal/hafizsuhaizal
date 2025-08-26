@@ -226,68 +226,6 @@
         padding: 0 24px; 
       }
       
-      .controls { 
-        display: flex; 
-        align-items: center; 
-        gap: 16px; 
-        position: sticky; 
-        top: 20px; 
-        background: rgba(0,0,0,0.8); 
-        backdrop-filter: blur(20px); 
-        padding: 20px 24px; 
-        border-radius: 20px; 
-        color: var(--text-primary);
-        border: 1px solid var(--border);
-        box-shadow: var(--shadow);
-        z-index: 100;
-        margin-bottom: 32px;
-      }
-      
-      .controls button { 
-        padding: 12px 24px; 
-        border-radius: 12px; 
-        border: 1px solid var(--border); 
-        background: var(--accent); 
-        color: var(--text-primary); 
-        cursor: pointer; 
-        font-weight: 500;
-        font-size: 14px;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 12px rgba(255,107,107,0.3);
-      }
-      
-      .controls button:hover {
-        background: var(--accent-hover);
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(255,107,107,0.4);
-      }
-      
-      .controls label { 
-        font-size: 14px; 
-        opacity: 0.9; 
-        font-weight: 500;
-        color: var(--text-secondary);
-      }
-      
-      .controls input[type=range]{ 
-        width: 200px; 
-        height: 6px;
-        border-radius: 3px;
-        background: var(--bg-secondary);
-        outline: none;
-        -webkit-appearance: none;
-      }
-      
-      .controls input[type=range]::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        background: var(--accent);
-        cursor: pointer;
-        box-shadow: 0 2px 8px rgba(255,107,107,0.4);
-      }
-      
       .reader { 
         height: 70vh; 
         overflow: auto; 
@@ -394,12 +332,6 @@
         .confession {
           margin: 40px auto;
           padding: 0 16px;
-        }
-        
-        .controls {
-          flex-direction: column;
-          gap: 12px;
-          padding: 16px 20px;
         }
         
         .reader {
@@ -680,12 +612,6 @@
     <div id="soundGate" class="sound-gate" style="display:none"><button id="soundGateBtn">Tap to enable sound</button></div>
 
     <section class="confession">
-      <div class="controls">
-        <button id="playScroll">▶️ Play</button>
-        <button id="pauseScroll">⏸️ Pause</button>
-        <label>Speed</label>
-        <input id="speed" type="range" min="0.25" max="3" step="0.25" value="1" />
-      </div>
       <div id="reader" class="reader">
         <div class="content" id="content">
           <h1>Assalamualaikum,</h1>
@@ -742,28 +668,9 @@
         document.addEventListener('visibilitychange', () => { if (!document.hidden) tryPlay(); });
 
         // Button explicit unlock
-        soundGate.addEventListener('click', unlock);
         soundGateBtn.addEventListener('click', unlock);
-        playBtn.addEventListener('click', unlock, { once: true });
-
-        // Smooth auto-scrolling reader
-        const reader = document.getElementById('reader');
-        const speedInput = document.getElementById('speed');
-        const playBtn = document.getElementById('playScroll');
-        const pauseBtn = document.getElementById('pauseScroll');
-
-        let running = false; let last = null; let speed = parseFloat(speedInput.value);
-        function step(ts){
-          if(!running){ last = null; return; }
-          if(last===null){ last = ts; requestAnimationFrame(step); return; }
-          const dt = (ts - last) / 1000; last = ts;
-          reader.scrollTop += dt * 40 * speed; // 40px/sec base
-          if(reader.scrollTop + reader.clientHeight >= reader.scrollHeight){ running = false; }
-          else requestAnimationFrame(step);
-        }
-        playBtn.addEventListener('click', () => { running = true; requestAnimationFrame(step); });
-        pauseBtn.addEventListener('click', () => { running = false; });
-        speedInput.addEventListener('click', () => { speed = parseFloat(speedInput.value); });
+ 
+        // Reader autoscroll controls removed
       });
     </script>
   </body>
