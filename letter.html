@@ -5,23 +5,259 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>untoldcoding</title>
     <link
-      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=VT323&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=VT323&family=Inter:wght@300;400;500;600&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="style.css" />
     <style>
-      :root { --accent: #ff6b6b; }
-      .confession { max-width: 820px; margin: 40px auto; padding: 0 16px; }
-      .controls { display:flex; align-items:center; gap:12px; position:sticky; top:0; background:rgba(0,0,0,.6); backdrop-filter: blur(6px); padding:8px 12px; border-radius:12px; color:#f5f5f5; }
-      .controls button { padding:8px 14px; border-radius:999px; border:1px solid #333; background:var(--accent); color:#fff; cursor:pointer; }
-      .controls label { font-size:14px; opacity:.9; }
-      .controls input[type=range]{ width:180px; }
-      .reader { height:60vh; overflow:auto; margin-top:12px; padding:24px; border-radius:16px; background:rgba(255,255,255,0.06); box-shadow: 0 10px 30px rgba(0,0,0,.35); }
-      .content { font-family: 'Playfair Display', serif; color:#f2f2f2; line-height:1.8; font-size:20px; }
-      .content h1 { font-weight:700; font-size:36px; margin:0 0 12px; color:#fff; }
-      .content p { margin:0 0 16px; }
-      .sound-gate { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,.6); z-index:9999; }
-      .sound-gate button { background:var(--accent); color:#fff; padding:14px 20px; border:none; border-radius:999px; font-size:16px; cursor:pointer; box-shadow:0 8px 20px rgba(0,0,0,.35); }
+      :root { 
+        --accent: #ff6b6b; 
+        --accent-hover: #ff5252;
+        --bg-primary: #0a0a0a;
+        --bg-secondary: rgba(255,255,255,0.08);
+        --text-primary: #ffffff;
+        --text-secondary: #e0e0e0;
+        --text-muted: #a0a0a0;
+        --border: rgba(255,255,255,0.1);
+        --shadow: 0 20px 40px rgba(0,0,0,0.4);
+        --shadow-hover: 0 25px 50px rgba(0,0,0,0.5);
+      }
+      
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      body {
+        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+        min-height: 100vh;
+        font-family: 'Inter', sans-serif;
+        color: var(--text-primary);
+        overflow-x: hidden;
+      }
+      
+      .confession { 
+        max-width: 900px; 
+        margin: 60px auto; 
+        padding: 0 24px; 
+      }
+      
+      .controls { 
+        display: flex; 
+        align-items: center; 
+        gap: 16px; 
+        position: sticky; 
+        top: 20px; 
+        background: rgba(0,0,0,0.8); 
+        backdrop-filter: blur(20px); 
+        padding: 20px 24px; 
+        border-radius: 20px; 
+        color: var(--text-primary);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        z-index: 100;
+        margin-bottom: 32px;
+      }
+      
+      .controls button { 
+        padding: 12px 24px; 
+        border-radius: 12px; 
+        border: 1px solid var(--border); 
+        background: var(--accent); 
+        color: var(--text-primary); 
+        cursor: pointer; 
+        font-weight: 500;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(255,107,107,0.3);
+      }
+      
+      .controls button:hover {
+        background: var(--accent-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(255,107,107,0.4);
+      }
+      
+      .controls label { 
+        font-size: 14px; 
+        opacity: 0.9; 
+        font-weight: 500;
+        color: var(--text-secondary);
+      }
+      
+      .controls input[type=range]{ 
+        width: 200px; 
+        height: 6px;
+        border-radius: 3px;
+        background: var(--bg-secondary);
+        outline: none;
+        -webkit-appearance: none;
+      }
+      
+      .controls input[type=range]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: var(--accent);
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(255,107,107,0.4);
+      }
+      
+      .reader { 
+        height: 70vh; 
+        overflow: auto; 
+        margin-top: 12px; 
+        padding: 48px; 
+        border-radius: 24px; 
+        background: var(--bg-secondary); 
+        box-shadow: var(--shadow);
+        border: 1px solid var(--border);
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+      }
+      
+      .reader:hover {
+        box-shadow: var(--shadow-hover);
+        transform: translateY(-2px);
+      }
+      
+      .content { 
+        font-family: 'Playfair Display', serif; 
+        color: var(--text-secondary); 
+        line-height: 1.9; 
+        font-size: 22px; 
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      
+      .content h1 { 
+        font-weight: 700; 
+        font-size: 48px; 
+        margin: 0 0 32px; 
+        color: var(--text-primary);
+        text-align: center;
+        background: linear-gradient(135deg, #ff6b6b, #ffa726);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: -0.02em;
+      }
+      
+      .content p { 
+        margin: 0 0 28px; 
+        text-align: justify;
+        text-justify: inter-word;
+        hyphens: auto;
+      }
+      
+      .content p:last-child {
+        margin-bottom: 0;
+      }
+      
+      .sound-gate { 
+        position: fixed; 
+        inset: 0; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        background: rgba(0,0,0,0.9); 
+        z-index: 9999;
+        backdrop-filter: blur(20px);
+      }
+      
+      .sound-gate button { 
+        background: var(--accent); 
+        color: var(--text-primary); 
+        padding: 20px 32px; 
+        border: none; 
+        border-radius: 16px; 
+        font-size: 18px; 
+        font-weight: 600;
+        cursor: pointer; 
+        box-shadow: var(--shadow);
+        transition: all 0.3s ease;
+        border: 1px solid var(--border);
+      }
+      
+      .sound-gate button:hover {
+        background: var(--accent-hover);
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-hover);
+      }
+      
+      /* Custom scrollbar */
+      .reader::-webkit-scrollbar {
+        width: 8px;
+      }
+      
+      .reader::-webkit-scrollbar-track {
+        background: rgba(255,255,255,0.05);
+        border-radius: 4px;
+      }
+      
+      .reader::-webkit-scrollbar-thumb {
+        background: var(--accent);
+        border-radius: 4px;
+      }
+      
+      .reader::-webkit-scrollbar-thumb:hover {
+        background: var(--accent-hover);
+      }
+      
+      /* Responsive design */
+      @media (max-width: 768px) {
+        .confession {
+          margin: 40px auto;
+          padding: 0 16px;
+        }
+        
+        .controls {
+          flex-direction: column;
+          gap: 12px;
+          padding: 16px 20px;
+        }
+        
+        .reader {
+          padding: 32px 24px;
+          height: 60vh;
+        }
+        
+        .content {
+          font-size: 20px;
+          line-height: 1.8;
+        }
+        
+        .content h1 {
+          font-size: 36px;
+          margin-bottom: 24px;
+        }
+        
+        .content p {
+          margin-bottom: 24px;
+        }
+      }
+      
+      /* Animation for content appearance */
+      .content > * {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeInUp 0.8s ease forwards;
+      }
+      
+      .content > *:nth-child(1) { animation-delay: 0.1s; }
+      .content > *:nth-child(2) { animation-delay: 0.3s; }
+      .content > *:nth-child(3) { animation-delay: 0.5s; }
+      .content > *:nth-child(4) { animation-delay: 0.7s; }
+      .content > *:nth-child(5) { animation-delay: 0.9s; }
+      
+      @keyframes fadeInUp {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
     </style>
   </head>
   <body>
@@ -45,18 +281,18 @@
 
     <section class="confession">
       <div class="controls">
-        <button id="playScroll">Play</button>
-        <button id="pauseScroll">Pause</button>
+        <button id="playScroll">▶️ Play</button>
+        <button id="pauseScroll">⏸️ Pause</button>
         <label>Speed</label>
         <input id="speed" type="range" min="0.25" max="3" step="0.25" value="1" />
       </div>
       <div id="reader" class="reader">
         <div class="content" id="content">
           <h1>Assalamualaikum,</h1>
-          <p>This may feel sudden, but I’ve finally found the courage to be honest with you. I have feelings for you. Even when you were with others before, I kept waiting for the right moment to say this, because I was afraid I’d have to see someone else win again if I didn’t speak up. I value our friendship deeply, and that’s why I’ve been shy, because I never want to risk losing it.</p>
+          <p>This may feel sudden, but I've finally found the courage to be honest with you. I have feelings for you. Even when you were with others before, I kept waiting for the right moment to say this, because I was afraid I'd have to see someone else win again if I didn't speak up. I value our friendship deeply, and that's why I've been shy, because I never want to risk losing it.</p>
           <p>After making istikharah, my heart feels at peace that you might be the right person for me. I know this is sudden, but please believe me, I never had the courage to say it whenever we met. If I don't speak now, I'm afraid I might lose something precious. If you're not comfortable with this, it's okay, I'm sorry for the suddenness. I waited because I didn't want to disturb your focus, your career, your studies, or make you feel like you had to commit to constant updates every day. But now that we're reaching the end of our studies (maybe it's just me, we don't really know what comes next :)), this feels like the right time to be honest. I'll accept whatever your answer is. Don't worry about me, you have every right to choose what's best for you.</p>
           <p>I also wanted to tell you this now because it feels like the right time. I don't expect anything from you, so please don't feel pressured. I'm willing to wait until you're ready, even until we're 27, like I said before :). If you already have someone in your heart, I'll accept that and keep going, no worries.</p>
-          <p>Thank you for always being there and for the time we’ve shared. I hope to be with someone who understands me, would be my travel partner, and can accept my clinginess. Whatever your answer is, thank you for reading. This might be a bit cringe, but if you have someone else, I’ll step back gracefully and wish you the best in everything you do. Please don’t cut the friendship, just act normally :) I’m a little shy right now. Bye.</p>
+          <p>Thank you for always being there and for the time we've shared. I hope to be with someone who understands me, would be my travel partner, and can accept my clinginess. Whatever your answer is, thank you for reading. This might be a bit cringe, but if you have someone else, I'll step back gracefully and wish you the best in everything you do. Please don't cut the friendship, just act normally :) I'm a little shy right now. Bye.</p>
         </div>
       </div>
     </section>
