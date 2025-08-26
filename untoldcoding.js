@@ -1,17 +1,43 @@
 const text =
-  "Dear BestFriend ,  I wnna Say Something.         Every passing day without you feels like a piece of me is missing. Your laughter, your kindness, your unwavering support—these are the things I find myself craving more than ever. Life seems a little less colorful without your presence by my side. There's a void in my heart that only your friendship can fill. Do you remember the countless adventures we embarked on? From spontaneous road trips to quiet nights spent stargazing, each memory is etched in my mind like a precious gem. Those moments weren't just fleeting instances; they were the building blocks of a bond that I hold dearer than words can express.I miss our late-night conversations that stretched into the early hours of the morning, where we bared our souls and shared our dreams without reservation. There's a unique comfort in being able to be completely yourself with someone, and that's a comfort I find only in you.Let's make a promise to each other—to never let the miles between us dull the spark of our friendship. I long for the day when we can reunite, to laugh until our stomachs ache and create new memories that will last a lifetime. Until then, I'll hold onto the memories we've made and keep you close in my thoughts and prayers.With each passing day, my anticipation grows stronger, knowing that soon we'll be able to wrap each other in tight hugs and pick up right where we left off. Until that moment arrives, know that you are dearly missed and loved more than words can convey.    ....................  .";
+  "<h1>Assalamualaikum,</h1><p>This may feel sudden, but I've finally found the courage to be honest with you. I have feelings for you. Even when you were with others before, I kept waiting for the right moment to say this, because I was afraid I'd have to see someone else win again if I didn't speak up. I value our friendship deeply, and that's why I've been shy, because I never want to risk losing it.</p><p>After making istikharah, my heart feels at peace that you might be the right person for me. I know this is sudden, but please believe me, I never had the courage to say it whenever we met. If I don't speak now, I'm afraid I might lose something precious. If you're not comfortable with this, it's okay, I'm sorry for the suddenness. I waited because I didn't want to disturb your focus, your career, your studies, or make you feel like you had to commit to constant updates every day. But now that we're reaching the end of our studies (maybe it's just me, we don't really know what comes next :)), this feels like the right time to be honest. I'll accept whatever your answer is. Don't worry about me, you have every right to choose what's best for you.</p><p>I also wanted to tell you this now because it feels like the right time. I don't expect anything from you, so please don't feel pressured. I'm willing to wait until you're ready, even until we're 27, like I said before :). If you already have someone in your heart, I'll accept that and keep going, no worries.</p><p>Thank you for always being there and for the time we've shared. I hope to be with someone who understands me, would be my travel partner, and can accept my clinginess. Whatever your answer is, thank you for reading. This might be a bit cringe, but if you have someone else, I'll step back gracefully and wish you the best in everything you do. Please don't cut the friendship, just act normally :) I'm a little shy right now. Bye.</p>";
 
 const paragraph = text.split("");
 
 let i = 0;
+let isTypingComplete = false;
 
 function dashOut(arr) {
-  if (i < arr.length) {
+  if (i < arr.length && !isTypingComplete) {
     console.log(arr[i]);
-    document.querySelector(".textCont").textContent += arr[i];
+    
+    // Handle HTML tags properly
+    if (arr[i] === '<') {
+      // Find the complete HTML tag
+      let tag = '';
+      let j = i;
+      while (j < arr.length && arr[j] !== '>') {
+        tag += arr[j];
+        j++;
+      }
+      if (j < arr.length) {
+        tag += arr[j];
+        document.querySelector(".textCont").innerHTML += tag;
+        i = j;
+      }
+    } else {
+      document.querySelector(".textCont").textContent += arr[i];
+    }
 
     i++;
     console.log("The i count: " + i);
+    
+    // Check if typing is complete
+    if (i >= arr.length) {
+      isTypingComplete = true;
+      console.log("Typing animation complete!");
+      return; // Stop the animation
+    }
+    
     setTimeout(function () {
       dashOut(arr);
     }, interval(arr[i]));
@@ -29,6 +55,8 @@ function interval(letter) {
 
 function startFromBegin() {
   i = 0;
+  isTypingComplete = false;
+  document.querySelector(".textCont").innerHTML = ""; // Clear previous content
   dashOut(paragraph);
 }
 
